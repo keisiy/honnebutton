@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>本音ボタン</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>本音ボタン</h1>
+
+    <div class="container">
+        <div class="card">
+        <h2>質問を選ぶ</h2>
+            <div class="question-list">
+                <a th:each="q : ${questions}"
+                    th:href="@{/questions/{id}(id=${q.id})}"
+                    th:text="${q.text}">
+                    質問
+                </a>
+            </div>
+        </div>
+
+        <div class="card" th:if="${question != null}">
+            <h2>回答する</h2>
+            <p th:text="${question.text}">質問文</p>
+
+            <form th:action="@{/questions/{id}(id=${question.id})}" th:object="${surveyForm}" method="post">
+                <div class="answer-buttons">
+                    <button type="submit" name="answer" value="YES">はい</button>
+                    <button type="submit" name="answer" value="NO">いいえ</button>
+                </div>
+
+                <div class="error" th:if="${#fields.hasErrors('answer')}" th:errors="*{answer}">
+                    エラー
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>集計結果</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>質問</th>
+                        <th>はい</th>
+                        <th>いいえ</th>
+                        <th>合計</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="result : ${results}">
+                        <td th:text="${result.questionText}">質問文</td>
+                        <td th:text="${result.yesCount}">0</td>
+                        <td th:text="${result.noCount}">0</td>
+                        <td th:text="${result.totalCount}">0</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>グラフで見る結果</h2>
+
+            <div th:each="result : ${results}" style="margin-bottom: 40px;">
+                <p th:text="${result.questionText}"></p>
+
+                <canvas th:id="'chart-' + ${result.questionId}" width="300" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+
+        const results = /*[[${results}]]*/ [];
+
+    /*]]>*/
+    </script>
+    <script>
+        results.forEach(result => {
+
+            const ctx = document.getElementById("chart-" + result.questionId);
+
+            new Chart(ctx, {
+                // type: 'pie',// 円グラフ
+                type: 'doughnut',
+                data: {
+                    labels: ['はい', 'いいえ'],
+                    datasets: [{
+                        data: [result.yesCount, result.noCount],
+                        backgroundColor: [
+                            '#4CAF50',
+                            '#f44336'
+                        ]
+                    }]
+                },
+                options: {
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const value = context.raw;
+                                    const percent = ((value / total) * 100).toFixed(1);
+                                    return `${value} (${percent}%)`;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
