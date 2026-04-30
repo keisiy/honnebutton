@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>質問管理</title>
+</head>
+<body>
+
+<h1>質問管理</h1>
+
+<a href="/admin/questions/new">＋ 新規作成</a>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>質問</th>
+        <th>状態</th>
+        <th>操作</th>
+    </tr>
+
+    <tr th:each="q : ${questions}">
+        <td th:text="${q.id}"></td>
+        <td th:text="${q.text}"></td>
+        <td th:text="${q.active}"></td>
+        <td>
+            <form th:action="@{/admin/questions/{id}/toggle(id=${q.id})}" method="post">
+                <button type="submit">切替</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

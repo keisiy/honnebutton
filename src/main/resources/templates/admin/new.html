@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>質問作成</title>
+</head>
+<body>
+
+<h1>質問を追加</h1>
+
+<form action="/admin/questions" method="post">
+    <input type="text" name="text" placeholder="質問内容" required>
+    <button type="submit">登録</button>
+</form>
+
+<a href="/admin/questions">戻る</a>
+
+</body>
+</html>
