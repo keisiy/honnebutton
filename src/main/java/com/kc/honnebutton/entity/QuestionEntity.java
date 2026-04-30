@@ -54,6 +54,10 @@ public class QuestionEntity {
         return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public Boolean getActive() {
         return active;
     }
