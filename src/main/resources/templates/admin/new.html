@@ -8,8 +8,15 @@
 
 <h1>質問を追加</h1>
 
-<form action="/admin/questions" method="post">
-    <input type="text" name="text" placeholder="質問内容" required>
+<form th:action="@{/admin/questions}" th:object="${question}" method="post">
+    <input type="text" th:field="*{text}" placeholder="質問内容" >
+
+    <p th:if="${#fields.hasErrors('text')}"
+        th:errors="*{text}"
+        style="color: red;">
+        エラー
+    </p>
+    
     <button type="submit">登録</button>
 </form>
 

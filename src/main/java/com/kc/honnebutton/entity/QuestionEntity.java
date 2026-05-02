@@ -9,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "questions")
@@ -18,6 +20,8 @@ public class QuestionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "質問文を入力してください")
+    @Size(max = 100, message = "質問文は100文字以内で入力してください")
     private String text;
 
     private Boolean active = true;

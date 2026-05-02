@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 
 import com.kc.honnebutton.entity.QuestionEntity;
 import com.kc.honnebutton.repository.QuestionRepository;
@@ -37,7 +39,13 @@ public class AdminQuestionController {
 
     // 登録
     @PostMapping
-    public String create(@ModelAttribute QuestionEntity question) {
+    public String create(@Valid @ModelAttribute("question") QuestionEntity question,
+                         BindingResult bindingResult) {
+        
+        if (bindingResult.hasErrors()) {
+            return "admin/new";
+        }
+        
         questionRepository.save(question);
         return "redirect:/admin/questions";
     }
